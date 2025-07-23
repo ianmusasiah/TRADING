@@ -1,203 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Easy Candlestick Reading Strategy</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f6f9fc;
-      margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background: #f7f7f7;
+      padding: 20px;
+      color: #222;
+      max-width: 900px;
+      margin: auto;
     }
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    h1, h2, h3 {
-      color: #2c3e50;
+    h1, h2 {
+      color: #333;
       text-align: center;
-      margin-bottom: 20px;
     }
-    p, ul, .note {
-      color: #2d3436;
-      line-height: 1.7;
-      font-size: 16px;
+    table {
+      width: 80%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    ul {
-      padding-left: 20px;
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #dee2e6;
     }
-    .candlestick {
+    th {
+      background-color: #343a40;
+      color: #fff;
+    }
+    tr:nth-child(even) {
+      background-color: #f1f3f5;
+    }
+    tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+    td.stake {
+      font-weight: bold;
+      color: #007bff;
+    }
+    td.note {
+      font-size: 0.9em;
+      color: #6c757d;
+    }
+    .diagram {
       display: flex;
-      flex-wrap: wrap;
-      gap: 40px;
+      align-items: flex-end;
       justify-content: center;
-      margin-top: 40px;
+      gap: 40px;
+      margin: 20px 0;
+      flex-wrap: wrap;
     }
     .candle {
-      text-align: center;
-      flex: 1 1 200px;
-    }
-    .bar {
-      position: relative;
-      width: 30px;
-      height: 120px;
-      margin: 0 auto 10px;
+      width: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .wick {
       width: 2px;
-      background: black;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
+      background: #333;
     }
     .body {
-      width: 100%;
-      position: absolute;
-      border: 1px solid #2d3436;
+      width: 20px;
+      height: 40px;
     }
-    .bullish .wick {
-      top: 0;
-      height: 80px;
-    }
-    .bullish .body {
-      top: 80px;
-      height: 30px;
-      background: green;
-    }
-    .bearish .wick {
-      top: 30px;
-      height: 80px;
-    }
-    .bearish .body {
-      top: 0;
-      height: 30px;
-      background: red;
-    }
-    .doji .wick {
-      top: 0;
-      height: 120px;
-    }
-    .doji .body {
-      top: 59px;
-      height: 2px;
-      background: #555;
-    }
-    .engulfing-up .wick {
-      top: 10px;
-      height: 100px;
-    }
-    .engulfing-up .body {
-      top: 30px;
-      height: 60px;
-      background: green;
-    }
-    .engulfing-down .wick {
-      top: 10px;
-      height: 100px;
-    }
-    .engulfing-down .body {
-      top: 30px;
-      height: 60px;
-      background: red;
-    }
-    .action {
-      margin-top: 5px;
-      font-weight: bold;
+    .green { background: green; }
+    .red { background: red; }
+    .label {
+      margin-top: 10px;
       font-size: 14px;
-      color: #34495e;
+      text-align: center;
     }
     .note {
-      background: #fef3c7;
-      border-left: 6px solid #f59e0b;
+      background: #fff3cd;
+      border-left: 6px solid #ffc107;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .box {
+      background: #fff;
       padding: 15px;
-      margin: 25px 0;
-      border-radius: 8px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>📈 Easy Candlestick Reading Strategy (For Pocket Option)</h1>
-    <p>This beginner-friendly blog explains how to understand single candlesticks using only <strong>green and red colors</strong>—exactly like what you see in Pocket Option. You'll learn when to trade <strong>UP</strong> or <strong>DOWN</strong> by spotting the most important candle shapes.</p>
-
-    <h2>🕯️ 4 Simple Candle Patterns</h2>
-    <div class="candlestick">
-      <div class="candle bullish">
-        <div class="bar">
-          <div class="wick"></div>
-          <div class="body"></div>
-        </div>
-        <div class="action">✅ Bullish Pin Bar<br><strong>Enter UP</strong> Trade</div>
+  <h1>📈 Easy Candlestick Reading Strategy</h1>
+  <div class="box">
+    <h2>Bullish Pin Bar (Buy Signal)</h2>
+    <div class="diagram">
+      <div class="candle">
+        <div class="wick" style="height: 60px;"></div>
+        <div class="body green"></div>
+        <div class="wick" style="height: 10px;"></div>
+        <div class="label">Green Bullish Pin</div>
       </div>
-      <div class="candle bearish">
-        <div class="bar">
-          <div class="wick"></div>
-          <div class="body"></div>
-        </div>
-        <div class="action">❌ Bearish Pin Bar<br><strong>Enter DOWN</strong> Trade</div>
-      </div>
-      <div class="candle doji">
-        <div class="bar">
-          <div class="wick"></div>
-          <div class="body"></div>
-        </div>
-        <div class="action">⚠️ Doji Candle<br>Wait or Confirm Trend</div>
-      </div>
-      <div class="candle engulfing-up">
-        <div class="bar">
-          <div class="wick"></div>
-          <div class="body"></div>
-        </div>
-        <div class="action">📗 Bullish Engulfing<br><strong>Enter UP</strong> Trade</div>
-      </div>
-      <div class="candle engulfing-down">
-        <div class="bar">
-          <div class="wick"></div>
-          <div class="body"></div>
-        </div>
-        <div class="action">📕 Bearish Engulfing<br><strong>Enter DOWN</strong> Trade</div>
+      <div class="candle">
+        <div class="wick" style="height: 60px;"></div>
+        <div class="body red"></div>
+        <div class="wick" style="height: 10px;"></div>
+        <div class="label">Red Bullish Pin</div>
       </div>
     </div>
-
-    <h2>📌 How to Read Candles (EASY)</h2>
-    <ul>
-      <li><strong>Green Candle</strong>: Price went UP (buyers are strong)</li>
-      <li><strong>Red Candle</strong>: Price went DOWN (sellers are strong)</li>
-      <li><strong>Long wick</strong>: Rejection or reversal at that price</li>
-      <li><strong>Small body, long wick</strong>: Sign of reversal (like Pin Bar)</li>
-      <li><strong>Doji</strong>: Market is confused — don’t rush</li>
-    </ul>
-
-    <h3>📈 When to Enter a Trade:</h3>
-    <ul>
-      <li><strong>UP Trade</strong>: Bullish Pin Bar or Bullish Engulfing appears at support.</li>
-      <li><strong>DOWN Trade</strong>: Bearish Pin Bar or Bearish Engulfing appears at resistance.</li>
-      <li><strong>Wait</strong>: If Doji or price is unclear.</li>
-    </ul>
-
-    <h3>🎯 Entry & Exit Rules</h3>
-    <ul>
-      <li><strong>Entry:</strong> Enter after the next candle breaks the high/low of the setup candle.</li>
-      <li><strong>Stop Loss:</strong> Just outside the wick (safe area).</li>
-      <li><strong>Take Profit:</strong> Aim for 1:2 Reward or next key level.</li>
-    </ul>
-
-    <div class="note">
-      🔥 <strong>IMPORTANT:</strong> Only use these candle setups near strong zones (support/resistance). Don’t trade randomly in the middle of the chart.
-    </div>
-
-    <div class="note">
-      ⚠️ <strong>Be Patient:</strong> Good candles appear every day. Wait for the right one and confirm with price movement.
-    </div>
-
-    <h3>🚀 Your Next Step</h3>
-    <p>Open Pocket Option demo mode and practice watching for green and red candles that look like these patterns. Use trendlines or support/resistance zones to improve accuracy. Practice makes profits!</p>
+    <div class="note">If you see this at the bottom of a trend → <strong>Enter UP (BUY)</strong></div>
   </div>
+
+  <div class="box">
+    <h2>Bearish Pin Bar (Sell Signal)</h2>
+    <div class="diagram">
+      <div class="candle">
+        <div class="wick" style="height: 10px;"></div>
+        <div class="body red"></div>
+        <div class="wick" style="height: 60px;"></div>
+        <div class="label">Red Bearish Pin</div>
+      </div>
+      <div class="candle">
+        <div class="wick" style="height: 10px;"></div>
+        <div class="body green"></div>
+        <div class="wick" style="height: 60px;"></div>
+        <div class="label">Green Bearish Pin</div>
+      </div>
+    </div>
+    <div class="note">If you see this at the top of a trend → <strong>Enter DOWN (SELL)</strong></div>
+  </div>
+
+  <div class="box">
+    <h2>Doji Candle</h2>
+    <div class="diagram">
+      <div class="candle">
+        <div class="wick" style="height: 30px;"></div>
+        <div class="body red" style="height: 5px;"></div>
+        <div class="wick" style="height: 30px;"></div>
+        <div class="label">Red Doji</div>
+      </div>
+      <div class="candle">
+        <div class="wick" style="height: 30px;"></div>
+        <div class="body green" style="height: 5px;"></div>
+        <div class="wick" style="height: 30px;"></div>
+        <div class="label">Green Doji</div>
+      </div>
+    </div>
+    <div class="note">
+      ⚠️ Doji means indecision. Wait for the next candle to confirm.
+      <ul>
+        <li>If next candle is green → <strong>Enter UP (BUY)</strong></li>
+        <li>If next candle is red → <strong>Enter DOWN (SELL)</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>Bullish Engulfing (Buy Signal)</h2>
+    <div class="diagram">
+      <div class="candle">
+        <div class="wick" style="height: 20px;"></div>
+        <div class="body green"></div>
+        <div class="wick" style="height: 20px;"></div>
+        <div class="label">Bullish Engulfing</div>
+      </div>
+    </div>
+    <div class="note">If you see this at the middle of a trend → <strong>Enter UP (BUY)</strong></div>
+  </div>  
+  
+  <div class="box">
+    <h2>Bearish Engulfing (Sell Signal)</h2>
+    <div class="diagram">
+      <div class="candle">
+        <div class="wick" style="height: 20px;"></div>
+        <div class="body red"></div>
+        <div class="wick" style="height: 20px;"></div>
+        <div class="label">Bearish Engulfing</div>
+      </div>
+    </div>
+    <div class="note">If you see this at the middle of a trend → <strong>Enter DOWN (SELL)</strong></div>
+  </div>
+  
+  <div class="box">
+    <h2>📌 Important Notes</h2>
+    <ul>
+      <li>A candle’s color does NOT always determine its direction alone.</li>
+      <li>Red can be bullish if there’s a long wick below and price reverses up.</li>
+      <li>Green can be bearish if it rejects the top and price falls afterward.</li>
+      <li>Always wait for confirmation after patterns (especially Doji).</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h1>⚠️Patience is more profitable than speed.</h1>
+    <h2>💰 Money Management:</h2>
+    <table>
+    <tr>
+      <th>Account Size ($)</th>
+      <th>Stake per Trade</th>
+      <th>Max Trades/Day</th>
+      <th>Target Profit/Day</th>
+      <th>Max Loss/Day</th>
+    </tr>
+    <tr>
+      <td>$10</td>
+      <td class="stake">$0.5</td>
+      <td>5</td>
+      <td>$1 - $2</td>
+      <td>$1.5</td>
+    </tr>
+    <tr>
+      <td>$20</td>
+      <td class="stake">$1</td>
+      <td>5</td>
+      <td>$2 - $4</td>
+      <td>$3</td>
+    </tr>
+    <tr>
+      <td>$50</td>
+      <td class="stake">$2</td>
+      <td>6</td>
+      <td>$5 - $10</td>
+      <td>$6</td>
+    </tr>
+    <tr>
+      <td>$100</td>
+      <td class="stake">$5</td>
+      <td>6</td>
+      <td>$10 - $20</td>
+      <td>$12</td>
+    </tr>
+    <tr>
+      <td>$200</td>
+      <td class="stake">$10</td>
+      <td>6</td>
+      <td>$20 - $40</td>
+      <td>$25</td>
+    </tr>
+    <tr>
+      <td>$500</td>
+      <td class="stake">$25</td>
+      <td>5</td>
+      <td>$50 - $100</td>
+      <td>$60</td>
+    </tr>
+    <tr>
+      <td>$1000</td>
+      <td class="stake">$50</td>
+      <td>4</td>
+      <td>$100 - $200</td>
+      <td>$100</td>
+    </tr>
+  </table>
+<p style="text-align:center; margin-top:20px; font-size:0.95em; color:#495057;">
+    ✅ Always follow your money management rules strictly.<br>
+    🚫 Stop trading if you hit your daily loss limit.<br>
+    🧠 Emotion control is key to consistent profits.
+  </p>
+    <ul>
+      <h3>💡 1. Risk Per Trade</h3>
+      <li>Never risk more than 1–2% of your account on a single trade.</li>
+      <li>If your balance is $100, risk $1–$2 per trade max.</li>
+      <h3>📘2. Stick to a Trading Plan</h3>
+      <li>Do not chase losses or overtrade.</li>
+      <li>Predefine entry, stop loss, take profit.</li>
+      <h3>🔁 3. Use Fixed Lot Sizes or Accsize Strategy</h3>
+      <li>Start with smaller sizes and increase only with profit.</li>
+      <li>Use sizes like: 10, 20, 30, 40... up to 1000, based on profit goals.</li>
+      <h3>💼 4. Daily Limit Rules</h3>
+      <li>Max 3–5 trades per day.</li>
+      <li>Stop trading after <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3 consecutive wins.</li></li>
+      <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2 consecutive losses.</li>
+      <h3>📉 5. Accept Losing Trades</h3>
+      <li>Losses are part of the game.</li>
+      <li>Do not increase lot/stake size to recover a loss.</li>
+      <h3>📊 6. Track All Trades</h3>
+      <li>Use a trading journal or Excel sheet to track entry, size, result, and mistakes.</li>
+      <h3>🔒 7. Always Use Stop Loss</h3>
+      <li>Even in fixed-time platforms, define how many attempts you'll use to recover.</li>
+      <h3>📈 8. Compound Profits (Optional)</h3>
+      <li>Withdraw profits weekly or monthly.</li>
+      <li>Or compound by increasing trade size slowly.</li>
+      <h3>❌ 9. Avoid Overleveraging</h3>
+      <li>Big wins feel good but can wipe your account.</li>
+      <li>Consistency is safer than gambling.</li>
+      <h3>✅ 10. Only Trade When Focused</h3>
+      <li>Don’t trade when angry, tired, or distracted.</li>
+      <li>⚠️ Patience is more profitable than speed.</li>
+            <li>⚠️ Be Patient: Good candles appear every day. Wait for the right one and confirm with price movement.</li>
+      <li>🔥 IMPORTANT: Only use these candle setups near strong zones (support/resistance). Don’t trade randomly in the middle of the chart.</li>
+      <br><i>Red = Price closed lower <br>
+Green = Price closed higher<br>
+Doji = Small candle body, indicates market indecision<br>
+Wait for the next candle confirmation before trading<br>
+Trade on strong signals only<br>
+Always practice risk management!</li>
+    </ul>
+  </div>
+  
+  <div class="box">
+    <h2>📌 Entry Rules:</h2>
+    <ul>
+      <li>&nbsp;&nbsp;&nbsp;&nbsp;📌 How to Read Candles (EASY)<br>
+Green Candle: Price went UP (buyers are strong)<br>
+Red Candle: Price went DOWN (sellers are strong)<br>
+Long wick: Rejection or reversal at that price<br>
+Small body, long wick: Sign of reversal (like Pin Bar)<br>
+Doji: Market is confused — don’t rush</li><br>
+      <li>
+Enter on the next candle after pattern confirmation.<br>
+Trade only when the candle fully forms (avoid early entries).<br>
+Use 1-minute or 2-minute expiry time for fast results.<br>
+Combine with support/resistance or trend line for better confirmation.</li>
+      <br>
+      <li>🎯 Entry & Exit Rules<br>
+Entry: Enter after the next candle breaks the high/low of the setup candle.<br>
+Stop Loss: Just outside the wick (safe area).<br>
+Take Profit: Aim for 1:2 Reward or next key level.</li>
+      <br>
+      <li>📈 When to Enter a Trade:<br>
+UP Trade: Bullish Pin Bar or Bullish Engulfing appears at support.<br>
+DOWN Trade: Bearish Pin Bar or Bearish Engulfing appears at resistance.<br>
+Wait: If Doji or price is unclear.</li>
+      <br>
+      
+      
+      
+      <h2>🚀 Your Next Step</h2>
+Open Pocket Option demo mode and practice watching for green and red candles that look like these patterns. Use trendlines or support/resistance zones to improve accuracy. Practice makes profits!
+    </ul>
+  </div>
+  
 </body>
 </html>
